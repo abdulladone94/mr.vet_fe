@@ -55,7 +55,7 @@ const HeaderSection = () => {
   const handleLogout = () => {
     logout();
     setUser(null);
-    router.push('/');
+    router.push('/auth/login');
   };
 
   const items = [
