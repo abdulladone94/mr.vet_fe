@@ -50,7 +50,7 @@ const HeaderSection = () => {
   const [form] = Form.useForm();
   const submitBtnRef = useRef();
 
-  // const { setSearchValue } = useDoctors();
+  const { setSearchValue } = useDoctors();
 
   const handleLogout = () => {
     logout();
@@ -126,7 +126,7 @@ const HeaderSection = () => {
     <Header className="bg-white rounded-b-2xl shadow-xl h-16 !p-0 z-50">
       <div className="flex items-center justify-between px-5 md:px-10">
         <Link
-          // onClick={() => setSearchValue('1')}
+          onClick={() => setSearchValue('')}
           href="/"
           className="hidden h-auto leading-none md:block"
         >

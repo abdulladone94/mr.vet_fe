@@ -4,21 +4,27 @@ import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
 // import LoginPage from './auth/login';
 import DoctorTable from '@/components/Table/DoctorTable';
-import { Space, Typography } from 'antd';
+import { Modal, Space, Typography } from 'antd';
 import BreadCrumb from '@/components/BreadCrumb';
 import CaseCard from '@/components/Card/CasesCard';
 import DateSearchFilters from '@/components/DateSearchFilter';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import api from '@/api';
+import FilledButton from '@/components/UI/Buttons/FilledButton';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   const [reports, setReports] = useState([]);
+  const [searchReportsRes, setSearchReportsRes] = useState();
   const [loading, setLoading] = useState(true);
+  const [searchDate, setSearchDate] = useState({});
+  console.log(searchDate);
 
   const pathName = usePathname();
+  const { confirm } = Modal;
 
   // const url = "/doctors/6";
   const doctorId = parseInt(pathName.split('/').pop());
@@ -36,6 +42,21 @@ export default function Home() {
       console.log(error);
     }
   };
+
+  const searchReports = async () => {
+    try {
+      const response = await api.report.searchReports({
+        ...searchDate,
+        id: doctorId,
+        pageNo: 1,
+        noOfItem: 10,
+      });
+      setSearchReportsRes(response.data.results || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getReportsByDoctorId();
   }, []);
@@ -49,6 +70,38 @@ export default function Home() {
   // console.log(reports[0].inspection.image_url);
   // console.log(reports[0].inspection.disease.disease);
 
+  useEffect(() => {
+    searchReports();
+    console.log(searchDate);
+  }, [searchDate]);
+
+  const showConfirm = (id) => {
+    confirm({
+      title: 'Are you want to delete this case?',
+      icon: <ExclamationCircleFilled />,
+      okText: 'Yes',
+      cancelText: 'No',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#f7a360',
+          color: 'white',
+        },
+      },
+      onOk() {
+        handleDelete(id);
+      },
+    });
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.report.deleteReport({ id: `${id}` });
+      getReportsByDoctorId();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -58,26 +111,32 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <DateSearchFilters placeholder="Search cases" />
+        <DateSearchFilters
+          placeholder="Search cases"
+          setSearchDate={setSearchDate}
+        />
 
         <div className="grid grid-cols-3 gap-4">
           {reports?.map((data) =>
             reports.length === 0 ? (
               <h1>There is no cases available for this doctor</h1>
             ) : (
-              <CaseCard
-                name={data.inspection.pet.pet_name}
-                age={'Date of Birth: ' + data.inspection.pet.dob}
-                breed="German Shepherd"
-                image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj5DTy38Tn--8rMY2LI3rpzV0_nQI1iHuKdw&usqp=CAU"
-                disease={
-                  'Predicted Disease: ' + data.inspection.disease.disease
-                }
-                score={
-                  'Predicted Score: ' + data.inspection.image_confident_score
-                }
-                heatMap="https://caninebodybalance.com.au/canine/media/pages/services/thermal-imaging/4a22a1e6f5-1664780008/dog-thermal-imaging.jpg"
-              />
+              <div className="w-[340px] h-[400px]  rounded-md">
+                <CaseCard
+                  button={() => showConfirm(data.id)}
+                  name={data.inspection.pet.pet_name}
+                  age={'Date of Birth: ' + data.inspection.pet.dob}
+                  breed="German Shepherd"
+                  image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj5DTy38Tn--8rMY2LI3rpzV0_nQI1iHuKdw&usqp=CAU"
+                  disease={
+                    'Predicted Disease: ' + data.inspection.disease.disease
+                  }
+                  score={
+                    'Predicted Score: ' + data.inspection.image_confident_score
+                  }
+                  heatMap="https://caninebodybalance.com.au/canine/media/pages/services/thermal-imaging/4a22a1e6f5-1664780008/dog-thermal-imaging.jpg"
+                />
+              </div>
             )
           )}
         </div>
