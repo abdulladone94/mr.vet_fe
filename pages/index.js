@@ -1,28 +1,34 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
-import LoginPage from './auth/login';
 import DoctorTable from '@/components/Table/DoctorTable';
-import { Space, Typography } from 'antd';
 import SearchFilters from '@/components/SearchFilters';
-import BreadCrumb from '@/components/BreadCrumb';
 import { useEffect, useMemo, useState } from 'react';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import api from '@/api';
-import { useRouter } from 'next/router';
+import { useDoctors } from '@/context/doctorContext';
+import { Modal, Space } from 'antd';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
-  const router = useRouter();
-
-  const { searchKey } = router.query;
   const [allDoctors, setAllDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchRes, setSearchRes] = useState([]);
-  const [searchValue, setSearchValue] = useState(searchKey);
 
-  console.log(searchKey);
+  const { searchValue, setSearchValue } = useDoctors();
+  const { confirm } = Modal;
+
+  const mapData = (row) => ({
+    id: row.id,
+    fName: row.first_name,
+    lName: row.last_name,
+    email: row.email,
+    mobile: row.phone_number,
+    hospital: row.hospital_name,
+    qualification: row.qualifications,
+    registration: row.registration_number,
+  });
 
   const getAllDoctors = async () => {
     setLoading(true);
@@ -31,8 +37,7 @@ export default function Home() {
         pageNo: '1',
         noOfItem: '8',
       });
-      setAllDoctors(response.data.results || []);
-      // console.log(setAllDoctors(response.results || []));
+      setAllDoctors(response.data.results?.map(mapData) || []);
     } catch (error) {
       console.log(error);
     }
@@ -40,14 +45,14 @@ export default function Home() {
   };
 
   const searchDoctors = async () => {
-    if (searchKey?.length > 0) {
+    if (searchValue?.length > 0) {
       try {
         const response = await api.doctor.searchDoctor({
-          name: searchKey,
+          name: searchValue,
           pageNo: '1',
           noOfItem: '10',
         });
-        setSearchRes(response.data.results || []);
+        setSearchRes(response.data.results?.map(mapData) || []);
       } catch (error) {
         console.log(error);
       }
@@ -60,19 +65,19 @@ export default function Home() {
 
   useEffect(() => {
     searchDoctors();
-  }, [searchKey]);
-  console.log(allDoctors);
+    console.log(searchValue);
+  }, [searchValue]);
 
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
+  const data = useMemo(() => {
+    return searchValue?.length > 0 ? searchRes : allDoctors;
+  }, [searchValue, allDoctors, searchRes]);
 
   const columns = [
     {
       title: 'First Name',
       dataIndex: 'fName',
       key: 'name',
-      render: (text) => <a>{text}</a>,
+      render: (text, id) => <a href={`/doctors/${id.id}`}>{text}</a>,
     },
     {
       title: 'Last Name',
@@ -111,39 +116,45 @@ export default function Home() {
       render: (_, record) => (
         <Space size="middle">
           <a>Edit</a>
-          <a>Delete</a>
+          <a
+            onClick={() => {
+              showConfirm(record.id);
+              console.log(record);
+            }}
+          >
+            Delete
+          </a>
         </Space>
       ),
     },
   ];
 
-  const mapData = (row) => ({
-    fName: row.first_name,
-    lName: row.last_name,
-    email: row.email,
-    mobile: row.phone_number,
-    hospital: row.hospital_name,
-    qualification: row.qualifications,
-    registration: row.registration_number,
-  });
+  const showConfirm = (id) => {
+    confirm({
+      title: 'Do you want to delete this Doctor?',
+      icon: <ExclamationCircleFilled />,
+      okText: 'Yes',
+      cancelText: 'No',
+      okButtonProps: {
+        style: {
+          backgroundColor: '#7D2B9A',
+          color: 'white',
+        },
+      },
+      onOk() {
+        handleDelete(id);
+      },
+    });
+  };
 
-  const data = useMemo(() => {
-    console.log(searchKey);
-    return searchKey?.length >= 0
-      ? searchRes.map(mapData)
-      : allDoctors.map(mapData);
-  }, [searchKey, allDoctors, searchRes, searchValue]);
-  // searchKey.length === 0 ? searchRes.map(mapData) : allDoctors.map(mapData);
-
-  // const data = allDoctors.map((row) => ({
-  //   fName: row.first_name,
-  //   lName: row.last_name,
-  //   email: row.email,
-  //   mobile: row.phone_number,
-  //   hospital: row.hospital_name,
-  //   qualification: row.qualifications,
-  //   registration: row.registration_number,
-  // }));
+  const handleDelete = async (id) => {
+    try {
+      await api.doctor.deleteDoctor({ id: `${id}` });
+      getAllDoctors();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -154,20 +165,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {/* <BreadCrumb /> */}
         <SearchFilters
           setSearchValue={setSearchValue}
           placeholder="Search Doctor"
         />
-        {/* <Typography.Title
-          level={1}
-          style={{
-            margin: 0,
-            textAlign: 'left',
-          }}
-        >
-          Doctors
-        </Typography.Title> */}
+
         <DoctorTable data={data} columns={columns} />
       </main>
     </>

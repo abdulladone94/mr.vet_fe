@@ -18,6 +18,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { CREATE_DOCTOR_ROUTE, LOGIN_ROUTE } from './constants/routes';
 import ModalComponents from './ModalComponents';
 import TextInputFields from './UI/InputFields/TextInputFields';
+import { useDoctors } from '@/context/doctorContext';
 
 const { Header } = Layout;
 
@@ -48,6 +49,8 @@ const HeaderSection = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   const submitBtnRef = useRef();
+
+  // const { setSearchValue } = useDoctors();
 
   const handleLogout = () => {
     logout();
@@ -122,7 +125,11 @@ const HeaderSection = () => {
   return (
     <Header className="bg-white rounded-b-2xl shadow-xl h-16 !p-0 z-50">
       <div className="flex items-center justify-between px-5 md:px-10">
-        <Link href="/" className="hidden h-auto leading-none md:block">
+        <Link
+          // onClick={() => setSearchValue('1')}
+          href="/"
+          className="hidden h-auto leading-none md:block"
+        >
           <Image
             src="/vet_logo.png"
             width={720}
