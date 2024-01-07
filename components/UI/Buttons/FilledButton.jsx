@@ -11,7 +11,7 @@ const FilledButton = ({
   size,
 }) => {
   const style = {
-    primary: 'bg-[#7D2B9A] text-white hover:!bg-[#a43ac9] hover:!text-white',
+    primary: 'bg-[#FD9340] text-white hover:!bg-[#f7a360] hover:!text-white',
     secondary:
       'bg-gray-300 text-gray-600 hover:bg-gray-400 hover:!text-gray-600',
   };

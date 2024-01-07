@@ -137,7 +137,7 @@ export default function Home() {
       cancelText: 'No',
       okButtonProps: {
         style: {
-          backgroundColor: '#7D2B9A',
+          backgroundColor: '#f7a360',
           color: 'white',
         },
       },

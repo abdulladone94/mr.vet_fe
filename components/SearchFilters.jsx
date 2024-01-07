@@ -20,7 +20,8 @@ const SearchFilters = ({ placeholder }) => {
     setSearchValue(values?.searchText);
   };
   useEffect(() => {
-    form.setFieldValue('searchText', searchValue);
+    form.setFieldsValue(searchText, '123');
+    // console.log(form.getFieldValue('searchText'));
   }, [searchValue]);
 
   return (
@@ -31,7 +32,7 @@ const SearchFilters = ({ placeholder }) => {
             <Input
               className="w-[308px] xl:w-[546px] md:w-[320px] rounded-md h-10 ml-5"
               placeholder={placeholder}
-              // value={searchValue}
+              // value={form.getFieldValue('searchText')}
               // onChange={(e) =>
               //   form.setFieldsValue({ searchText: e.target.value })
               // }
@@ -41,7 +42,7 @@ const SearchFilters = ({ placeholder }) => {
           <Form.Item>
             <Button
               htmlType="submit"
-              className="bg-[#7D2B9A] w-8 h-10 rounded-md"
+              className="bg-[#FD9340] w-8 h-10 rounded-md ml-1"
               icon={<SearchOutlined />}
             />
           </Form.Item>
