@@ -62,7 +62,7 @@ const createDoctor = () => {
     console.log(values);
     setIsSubmitting(true);
     try {
-      // let formdata = new FormData();
+      let formdata = new FormData();
       const body = {
         first_name: values.first_name,
         last_name: values.last_name,

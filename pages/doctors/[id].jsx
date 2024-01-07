@@ -8,10 +8,47 @@ import { Space, Typography } from 'antd';
 import BreadCrumb from '@/components/BreadCrumb';
 import CaseCard from '@/components/Card/CasesCard';
 import DateSearchFilters from '@/components/DateSearchFilter';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import api from '@/api';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const pathName = usePathname();
+
+  // const url = "/doctors/6";
+  const doctorId = parseInt(pathName.split('/').pop());
+  console.log(pathName);
+
+  const getReportsByDoctorId = async () => {
+    try {
+      const response = await api.report.reportByDoctorId({
+        id: doctorId,
+        pageNo: '1',
+        noOfItem: '10',
+      });
+      setReports(response.data.results || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getReportsByDoctorId();
+  }, []);
+  console.log(reports);
+  // console.log(reports[0].inspection);
+  // console.log(reports[0].inspection.pet.breed.breed_name);
+  // console.log(reports[0].inspection.pet.dob);
+  // console.log(reports[0].inspection.pet.pet_name);
+  // console.log(reports[0].inspection.image_confident_score);
+  // console.log(reports[0].inspection.heat_map_url);
+  // console.log(reports[0].inspection.image_url);
+  // console.log(reports[0].inspection.disease.disease);
+
   return (
     <>
       <Head>
@@ -21,43 +58,28 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        {/* <Typography.Title
-          level={1}
-          style={{
-            margin: 0,
-            textAlign: 'left',
-          }}
-        >
-          Cases
-        </Typography.Title> */}
-        {/* <BreadCrumb /> */}
         <DateSearchFilters placeholder="Search cases" />
-        {/* <DoctorTable data={data} columns={columns} /> */}
-        <div className="flex">
-          <CaseCard
-            age="Age: 12"
-            name="Fluffy"
-            breed="German Shepherd"
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj5DTy38Tn--8rMY2LI3rpzV0_nQI1iHuKdw&usqp=CAU"
-            disease="Predicted Disease: Ringworm"
-            // heatMap="https://media.istockphoto.com/id/860248068/photo/beautiful-mutt-black-dog-on-mountain-rock.jpg?s=2048x2048&w=is&k=20&c=K09MP1b8wYgwmi2ZcmjMN_LQ6nIJlU4uhw6GmOxKnKo="
-          />
-          <CaseCard
-            age="Age: 14"
-            name="Alex"
-            breed="Golden Retriever"
-            image="https://www.thesprucepets.com/thmb/baW88YsVO_JqNBNJPhCFBHbNUMM=/1500x0/filters:no_upscale():strip_icc()/dog-breed-profile-golden-retriever-1117969-hero-da398f6462704058ace0ef5ae007866d.jpeg"
-            disease="Predicted Disease: Mange"
-            // heatMap="https://media.istockphoto.com/id/860248068/photo/beautiful-mutt-black-dog-on-mountain-rock.jpg?s=2048x2048&w=is&k=20&c=K09MP1b8wYgwmi2ZcmjMN_LQ6nIJlU4uhw6GmOxKnKo="
-          />
-          <CaseCard
-            age="Age: 18"
-            name="Browny"
-            breed="Bulldog"
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXY7AhKVWZDEX3esy5Ia8TzNxcoG3o1xHEHg&usqp=CAU"
-            disease="Predicted Disease: Ringworm"
-            // heatMap="https://media.istockphoto.com/id/860248068/photo/beautiful-mutt-black-dog-on-mountain-rock.jpg?s=2048x2048&w=is&k=20&c=K09MP1b8wYgwmi2ZcmjMN_LQ6nIJlU4uhw6GmOxKnKo="
-          />
+
+        <div className="grid grid-cols-3 gap-4">
+          {reports?.map((data) =>
+            reports.length === 0 ? (
+              <h1>There is no cases available for this doctor</h1>
+            ) : (
+              <CaseCard
+                name={data.inspection.pet.pet_name}
+                age={'Date of Birth: ' + data.inspection.pet.dob}
+                breed="German Shepherd"
+                image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj5DTy38Tn--8rMY2LI3rpzV0_nQI1iHuKdw&usqp=CAU"
+                disease={
+                  'Predicted Disease: ' + data.inspection.disease.disease
+                }
+                score={
+                  'Predicted Score: ' + data.inspection.image_confident_score
+                }
+                heatMap="https://caninebodybalance.com.au/canine/media/pages/services/thermal-imaging/4a22a1e6f5-1664780008/dog-thermal-imaging.jpg"
+              />
+            )
+          )}
         </div>
       </main>
     </>
