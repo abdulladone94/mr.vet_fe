@@ -1,3 +1,4 @@
+import { DoctorProvider } from '@/context/doctorContext';
 import '@/styles/globals.css';
 import dynamic from 'next/dynamic';
 const Layout = dynamic(() => import('@/components/Layout/Layout'), {
@@ -7,9 +8,11 @@ const Layout = dynamic(() => import('@/components/Layout/Layout'), {
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <DoctorProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </DoctorProvider>
     </>
   );
 }

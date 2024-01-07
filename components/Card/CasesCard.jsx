@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'antd';
 const { Meta } = Card;
-const CaseCard = ({ age, name, breed, image, heatMap, disease }) => (
+const CaseCard = ({ age, name, breed, image, heatMap, disease, score }) => (
   //   <div className="flex justify-center">
   <Card
     hoverable
@@ -19,18 +19,15 @@ const CaseCard = ({ age, name, breed, image, heatMap, disease }) => (
     </div>
     <p className="mt-2">{age}</p>
     <p className="mt-2">{disease}</p>
+    <p className="mt-2">{score}</p>
     <div className="flex mt-5">
-      <div className="h-10 w-48">
+      <div className="w-48 h-10">
         <p>Image</p>
-        <img className="rounded h-24 w-48" alt="example" src={image} />
+        <img className="w-48 h-24 rounded" alt="example" src={image} />
       </div>
-      <div className="h-10 w-48 ml-2">
+      <div className="w-48 h-10 ml-2">
         <p>Heat map Image</p>
-        <img
-          className="rounded h-24 w-48"
-          alt="example"
-          src="https://caninebodybalance.com.au/canine/media/pages/services/thermal-imaging/4a22a1e6f5-1664780008/dog-thermal-imaging.jpg"
-        />
+        <img className="w-48 h-24 rounded" alt="example" src={heatMap} />
       </div>
     </div>
   </Card>

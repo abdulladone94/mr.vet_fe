@@ -19,4 +19,9 @@ export default (axios, endpoint) => ({
     console.log(body);
     return data;
   },
+
+  deleteDoctor: async (body) => {
+    const data = await axios.post(endpoint + '/delete', body);
+    return data;
+  },
 });

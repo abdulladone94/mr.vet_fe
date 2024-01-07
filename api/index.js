@@ -3,6 +3,7 @@ import auth from './auth';
 // import user from './user';
 import { getAccessToken } from '@/utils/auth';
 import doctor from './doctor';
+import report from './report';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -27,4 +28,5 @@ export default {
   auth: auth(axios, '/admin'),
   // user: user(axios, '/user'),
   doctor: doctor(axios, '/doctor'),
+  report: report(axios, '/report'),
 };
