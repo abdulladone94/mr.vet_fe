@@ -1,18 +1,13 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
-// import LoginPage from './auth/login';
-import DoctorTable from '@/components/Table/DoctorTable';
 import { Modal, Space, Typography } from 'antd';
-import BreadCrumb from '@/components/BreadCrumb';
-import CaseCard from '@/components/Card/CasesCard';
 import DateSearchFilters from '@/components/DateSearchFilter';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import api from '@/api';
-import FilledButton from '@/components/UI/Buttons/FilledButton';
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import CaseReport from '@/components/Card/CasesReport';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,6 +16,8 @@ export default function Home() {
   const [searchReportsRes, setSearchReportsRes] = useState();
   const [loading, setLoading] = useState(true);
   const [searchDate, setSearchDate] = useState({});
+
+  const isDateValid = !!searchDate.fromDate;
   console.log(searchDate);
 
   const pathName = usePathname();
@@ -44,6 +41,7 @@ export default function Home() {
   };
 
   const searchReports = async () => {
+    if (!isDateValid) return;
     try {
       const response = await api.report.searchReports({
         ...searchDate,
@@ -60,15 +58,6 @@ export default function Home() {
   useEffect(() => {
     getReportsByDoctorId();
   }, []);
-  console.log(reports);
-  // console.log(reports[0].inspection);
-  // console.log(reports[0].inspection.pet.breed.breed_name);
-  // console.log(reports[0].inspection.pet.dob);
-  // console.log(reports[0].inspection.pet.pet_name);
-  // console.log(reports[0].inspection.image_confident_score);
-  // console.log(reports[0].inspection.heat_map_url);
-  // console.log(reports[0].inspection.image_url);
-  // console.log(reports[0].inspection.disease.disease);
 
   useEffect(() => {
     searchReports();
@@ -102,6 +91,25 @@ export default function Home() {
     }
   };
 
+  const caseReportComponent = (data) => (
+    <CaseReport
+      profileImage={data.inspection.pet.pet_image_url}
+      name={data.inspection.pet.pet_name}
+      dob={data.inspection.pet.dob}
+      breed={data.inspection.pet.breed.breed_name}
+      species={data.inspection.pet.species.species_name}
+      gender={data.inspection.pet.gender}
+      image={data.inspection.image_url}
+      disease={data.inspection.disease.disease}
+      heatMap={data.inspection.heat_map_url}
+      healthStatus={data.inspection.health_status.health_status}
+      score={data.inspection.domain_confident_score}
+      username={data.inspection.user.username}
+      email={data.inspection.user.email || '-'}
+      button={() => showConfirm(data.id)}
+    />
+  );
+
   return (
     <>
       <Head>
@@ -116,11 +124,12 @@ export default function Home() {
           setSearchDate={setSearchDate}
         />
 
-        <div className="grid grid-cols-3 gap-4">
-          {reports?.map((data) =>
-            reports.length === 0 ? (
-              <h1>There is no cases available for this doctor</h1>
-            ) : (
+        {/* <div className="grid grid-cols-3 gap-4">
+          {reports?.map(
+            (data) => (
+              // data === null ? (
+              //   <h1>There is no cases available for this doctor</h1>
+              // ) : (
               <div className="w-[340px] h-[400px]  rounded-md">
                 <CaseCard
                   button={() => showConfirm(data.id)}
@@ -138,7 +147,14 @@ export default function Home() {
                 />
               </div>
             )
+            // )
           )}
+          <CaseReport />
+        </div> */}
+        <div className="grid w-full grid-cols-3 gap-8">
+          {isDateValid
+            ? searchReportsRes?.map(caseReportComponent)
+            : reports?.map(caseReportComponent)}
         </div>
       </main>
     </>
