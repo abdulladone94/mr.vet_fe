@@ -48,22 +48,33 @@ const validatePhoneNumber = (rule, value) => {
 // };
 
 const createDoctor = () => {
-  const [initialValue, setInitialValue] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { query } = router;
+  const editDoctorDetails = query.doctor ? JSON.parse(query.doctor) : {};
+  const isUpdate = !!editDoctorDetails.id;
+
+  const initialValue = {
+    first_name: editDoctorDetails.fName || '',
+    last_name: editDoctorDetails.lName || '',
+    email: editDoctorDetails.email || '',
+    phone_number: editDoctorDetails.mobile || '',
+    hospital_name: editDoctorDetails.hospital || '',
+    qualifications: editDoctorDetails.qualification || '',
+    registration_number: editDoctorDetails.registration || '',
+    password: '',
+  };
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
 
   const loggedIn = isLoggedIn();
   const [form] = Form.useForm();
-  const router = useRouter();
-  const { query } = router;
 
   const onFinish = async (values) => {
-    console.log(values);
     setIsSubmitting(true);
     try {
-      let formdata = new FormData();
       const body = {
+        id: editDoctorDetails.id?.toString(),
         first_name: values.first_name,
         last_name: values.last_name,
         email: values.email,
@@ -74,69 +85,25 @@ const createDoctor = () => {
         password: values.password,
       };
 
-      // if (
-      //   dayjs(values.available_date?.[1]).format('YYYY-MM-DD') >
-      //   new Date().toISOString().split('T')[0]
-      // ) {
-      //   body['availableStartDate'] = dayjs(values.available_date?.[0]).format(
-      //     'YYYY-MM-DD'
-      //   );
-      //   body['availableEndDate'] = dayjs(values.available_date?.[1]).format(
-      //     'YYYY-MM-DD'
-      //   );
-      // }
-
-      // if (!query.sugarId) {
-      //   body['statusId'] = 1;
-      //   body['sugarPostTypeId'] = postType;
-      // }
-
-      // if (query['create-offer']) {
-      //   body['isGlobal'] = isGlobal;
-      // }
-
-      formdata.append('data', body);
-
-      // if (values.picture?.length > 0) {
-      //   values.picture?.forEach((picture) => {
-      //     formdata.append('file', picture.originFileObj);
-      //   });
-      // } else {
-      //   const emptyFile = new Blob([], { type: 'application/octet-stream' });
-      //   formdata.append('file', emptyFile, 'empty.txt');
-      // }
-
-      let response;
-      if (query.id) {
-        response = await api.doctor.updateDoctor(body, query.id);
-
-        // if (response.data.status === '500') {
-        //   await setError(response.data.message);
-        //   throw 500;
-        // } else {
-        //   fetchSugarPost();
-        // }
+      if (isUpdate) {
+        response = await api.doctor.updateDoctor(body);
       } else {
         response = await api.doctor.createDoctor(body);
-        if (response.data.status === '500') {
-          await setError(response.data.message);
-          throw 500;
-        } else {
-          form.resetFields();
-        }
       }
+      form.resetFields();
       setIsSubmitting(false);
     } catch (error) {
       setIsSubmitting(false);
       console.log('>>', error);
-      throw error;
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleSubmit = async (value) => {
     try {
-      await onFinish(value),
-        toast.success(`Doctor is ${query.id ? 'updated' : 'created'}`);
+      await onFinish(value);
+      toast.success(`Doctor is ${isUpdate ? 'updated' : 'created'}`);
       router.push('/');
     } catch {
       toast.error('Something went wrong, Try again later!');
@@ -145,11 +112,7 @@ const createDoctor = () => {
 
   return (
     <div className="responsive">
-      {/* <h1>Create Doctor</h1> */}
-      {/* <div className="my-10">
-        <SearchDropdown />
-      </div> */}
-      {isLoading && (
+      {isSubmitting && (
         <div className="grid h-screen place-content-center">
           <Spin />
         </div>
@@ -232,7 +195,7 @@ const createDoctor = () => {
                 title="Hospital Name"
                 required={true}
                 rules={[
-                  { required: true, message: 'Hospital Name is required' },
+                  { required: false, message: 'Hospital Name is required' },
                 ]}
               />
               <TextInputFields
@@ -240,7 +203,7 @@ const createDoctor = () => {
                 title="Qualification"
                 required={true}
                 rules={[
-                  { required: true, message: 'Qualification is required' },
+                  { required: false, message: 'Qualification is required' },
                 ]}
               />
               <TextInputFields
@@ -288,9 +251,9 @@ const createDoctor = () => {
               <Form.Item>
                 <FilledButton
                   variant="primary"
-                  label="Create"
+                  label={isUpdate ? 'Update' : 'Create'}
                   type="submit"
-                  // loading={isSubmitting}
+                  loading={isSubmitting}
                 />
               </Form.Item>
             </>

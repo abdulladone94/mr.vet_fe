@@ -8,6 +8,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 import api from '@/api';
 import { useDoctors } from '@/context/doctorContext';
 import { Modal, Space } from 'antd';
+import { useRouter } from 'next/router';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,6 +18,8 @@ export default function Home() {
   const [searchRes, setSearchRes] = useState([]);
 
   const { searchValue, setSearchValue } = useDoctors();
+
+  const router = useRouter();
   const { confirm } = Modal;
 
   const mapData = (row) => ({
@@ -115,7 +118,16 @@ export default function Home() {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a>Edit</a>
+          <a
+            onClick={() => {
+              router.push({
+                pathname: '/doctors/createDoctor',
+                query: { doctor: JSON.stringify(record) },
+              });
+            }}
+          >
+            Edit
+          </a>
           <a
             onClick={() => {
               showConfirm(record.id);
