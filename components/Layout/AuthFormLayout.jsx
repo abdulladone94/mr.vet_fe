@@ -35,14 +35,11 @@ const AuthFormLayout = ({ title, image, error, children, successMessage }) => {
                 height={720}
                 alt="logo"
                 priority={true}
-                className="w-[125px] object-contain h-auto"
+                className="w-[150px] object-contain h-auto"
               />
             </Link>
             <div className="flex flex-col justify-start mt-5">
               <h1 className="text-3xl lg:text-4xl">{title}</h1>
-              <Text className="mt-2" type="secondary">
-                Treating your pet is a treat
-              </Text>
             </div>
           </div>
           {successMessage || error ? (

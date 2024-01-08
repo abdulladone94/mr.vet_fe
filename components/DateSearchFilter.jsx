@@ -13,8 +13,8 @@ const DateSearchFilters = ({ setSearchDate }) => {
   const onFinish = (values) => {
     // console.log(values.dateRange[0].format('YYYY-MM-DD'));
     setSearchDate({
-      toDate: values.dateRange[1].format('YYYY-MM-DD'),
-      fromDate: values.dateRange[0].format('YYYY-MM-DD'),
+      toDate: values.dateRange?.[1]?.format('YYYY-MM-DD'),
+      fromDate: values.dateRange?.[0]?.format('YYYY-MM-DD'),
     });
   };
   return (
