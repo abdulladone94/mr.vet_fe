@@ -30,12 +30,12 @@ const AuthFormLayout = ({ title, image, error, children, successMessage }) => {
           <div className="mb-5 text-left lg:mb-10">
             <Link href="/" className="h-auto leading-none">
               <Image
-                src="/mr.vet_logo.png"
+                src="/vet_logo.png"
                 width={720}
                 height={720}
                 alt="logo"
                 priority={true}
-                className="w-[150px] object-contain h-auto"
+                className="w-[125px] object-contain h-auto"
               />
             </Link>
             <div className="flex flex-col justify-start mt-5">

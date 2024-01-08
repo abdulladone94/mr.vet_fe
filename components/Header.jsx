@@ -19,27 +19,29 @@ import { CREATE_DOCTOR_ROUTE, LOGIN_ROUTE } from './constants/routes';
 import ModalComponents from './ModalComponents';
 import TextInputFields from './UI/InputFields/TextInputFields';
 import { useDoctors } from '@/context/doctorContext';
+import api from '@/api';
+import toast from 'react-hot-toast';
 
 const { Header } = Layout;
 
-const validatePassword = (rule, value) => {
-  return new Promise((resolve, reject) => {
-    const charRegex = /[a-zA-Z]/;
-    const specialCharRegex = /(?=.*[!@#$%^&*])/;
+// const validatePassword = (rule, value) => {
+//   return new Promise((resolve, reject) => {
+//     const charRegex = /[a-zA-Z]/;
+//     const specialCharRegex = /(?=.*[!@#$%^&*])/;
 
-    if (!value) {
-      resolve();
-    } else if (value.length < 8) {
-      reject('Your password must be at least 8 characters');
-    } else if (!charRegex.test(value)) {
-      reject('Your password must contain at least one letter.');
-    } else if (!specialCharRegex.test(value)) {
-      reject('Your password must contain at least one special letter.');
-    } else {
-      resolve();
-    }
-  });
-};
+//     if (!value) {
+//       resolve();
+//     } else if (value.length < 8) {
+//       reject('Your password must be at least 8 characters');
+//     } else if (!charRegex.test(value)) {
+//       reject('Your password must contain at least one letter.');
+//     } else if (!specialCharRegex.test(value)) {
+//       reject('Your password must contain at least one special letter.');
+//     } else {
+//       resolve();
+//     }
+//   });
+// };
 
 const HeaderSection = () => {
   const [user, setUser] = useState(getAuthUser());
@@ -96,6 +98,7 @@ const HeaderSection = () => {
   }, []);
 
   const onChangePassword = async (values) => {
+    console.log(values);
     setPasswordLoading(true);
     try {
       const body = {
@@ -104,7 +107,7 @@ const HeaderSection = () => {
         userNameByAccessToken: null,
       };
 
-      const res = await api.user.changePassword(body);
+      const res = await api.auth.changePassword(body);
 
       if (res.data.status === '404') {
         toast.error('Your old password is incorrect!');
@@ -112,8 +115,9 @@ const HeaderSection = () => {
         toast.success('Password changed successfully!');
 
         setIsModalOpen(false);
-        fetchUserDetails();
+        // fetchUserDetails();
         form.resetFields();
+        handleLogout();
       }
     } catch (error) {
       toast.error('Something went wrong!');
@@ -136,7 +140,7 @@ const HeaderSection = () => {
             height={720}
             alt="logo"
             priority={true}
-            className="w-[150px] md:w-[220px] object-contain h-[64px]"
+            className="w-[150px] md:w-[220px] object-contain h-[64px] ml-16 pl-10"
           />
         </Link>
 
@@ -171,7 +175,7 @@ const HeaderSection = () => {
                   {user.full_name}
                 </p>
                 <Avatar
-                  src={user.profile_img_url ?? null}
+                  src={user.profile_img_url ?? '/public/mr.vet-login.jpeg'}
                   size={38}
                   className={`${!user.profile_img_url && 'bg-[orange]'}`}
                 >
@@ -223,7 +227,7 @@ const HeaderSection = () => {
             title="New password"
             rules={[
               { message: 'New Password is required!' },
-              { validator: validatePassword },
+              // { validator: validatePassword },
             ]}
             type="password"
           />
