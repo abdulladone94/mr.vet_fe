@@ -9,6 +9,7 @@ import api from '@/api';
 import { useDoctors } from '@/context/doctorContext';
 import { Modal, Space } from 'antd';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -162,8 +163,10 @@ export default function Home() {
   const handleDelete = async (id) => {
     try {
       await api.doctor.deleteDoctor({ id: `${id}` });
+      toast.success('Doctor deleted successfully');
       getAllDoctors();
     } catch (error) {
+      toast.error('Something went wrong, Try again later!');
       console.log(error);
     }
   };

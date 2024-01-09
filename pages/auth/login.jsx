@@ -10,6 +10,7 @@ import { useState } from 'react';
 
 import TextInputFields from '@/components/UI/InputFields/TextInputFields';
 import FilledButton from '@/components/UI/Buttons/FilledButton';
+import toast from 'react-hot-toast';
 
 const LoginPage = () => {
   const [error, setError] = useState(null);
@@ -27,10 +28,12 @@ const LoginPage = () => {
       const { data } = await api.auth.login(body);
       if (data.accesToken !== '') {
         setAuth(data);
+        toast.success('Logged in successfully');
         router.push('/');
       }
     } catch (error) {
       console.log(error);
+      toast.error('Something went wrong, Try again later!');
       setError(error?.response?.data?.message);
     }
     setIsLoading(false);

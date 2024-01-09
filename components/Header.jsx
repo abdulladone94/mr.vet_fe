@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import FilledButton from './UI/Buttons/FilledButton';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { CREATE_DOCTOR_ROUTE, LOGIN_ROUTE } from './constants/routes';
 import ModalComponents from './ModalComponents';
 import TextInputFields from './UI/InputFields/TextInputFields';
@@ -175,11 +175,13 @@ const HeaderSection = () => {
                   {user.full_name}
                 </p>
                 <Avatar
-                  src={user.profile_img_url ?? '/public/mr.vet-login.jpeg'}
+                  // src={user.profile_img_url ?? '/public/mr.vet-login.jpeg'}
+                  src={<UserOutlined />}
                   size={38}
                   className={`${!user.profile_img_url && 'bg-[orange]'}`}
                 >
-                  {user.full_name && user.full_name[0]}
+                  {/* {user.full_name && user.full_name[0]} */}
+                  {'Admin'}
                 </Avatar>
                 <DownOutlined />
               </Button>
