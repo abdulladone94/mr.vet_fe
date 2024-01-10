@@ -2,6 +2,7 @@ import FilledButton from '../UI/Buttons/FilledButton';
 
 export default function CaseReport({
   profileImage,
+  createdDate,
   name,
   dob,
   breed,
@@ -14,13 +15,17 @@ export default function CaseReport({
   score,
   username,
   email,
+
   button,
 }) {
   return (
     <div className="flex flex-col gap-8">
       <div className="overflow-hidden rounded-lg shadow-lg border-[#FD9340] border-2">
         <div className="flex items-center justify-between p-4 bg-[#dcdad9]">
-          <h2 className="text-lg font-semibold">Pet Information</h2>
+          <h2 className="text-lg font-semibold">
+            Pet Information
+            <p className="text-sm">{createdDate}</p>
+          </h2>
           <img
             alt="Pet Image"
             className="rounded-full"
@@ -58,12 +63,12 @@ export default function CaseReport({
           </div>
         </div>
         <div className="p-4 bg-[#dcdad9]">
-          <h2 className="text-lg font-semibold text-left">Health Concerns</h2>
+          <h2 className="text-lg font-semibold text-left">Health Condition</h2>
         </div>
         <div className="grid gap-6 p-4">
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <p className="font-light">Image</p>
+              <p className="font-light">Uploaded Image</p>
               <img
                 alt="Pet Image"
                 className="aspect-[1/1] object-cover w-full"
@@ -73,7 +78,7 @@ export default function CaseReport({
               />
             </div>
             <div>
-              <p className="font-light">Heat Map Image</p>
+              <p className="font-light">Analyzed Image</p>
               <img
                 alt="Heat Map Image"
                 className="aspect-[1/1] object-cover w-full"
@@ -94,7 +99,7 @@ export default function CaseReport({
             </div>
 
             <div className="flex space-x-4">
-              <p className="font-light">Predicted Score</p>
+              <p className="font-light">Accuracy</p>
               <p className="font-medium">{score}</p>
             </div>
             <div className="flex space-x-4">
@@ -109,9 +114,7 @@ export default function CaseReport({
           </div>
         </div>
         <div className="p-4 bg-[#dcdad9]">
-          <h2 className="text-lg font-semibold text-left">
-            Owner's Information
-          </h2>
+          <h2 className="text-lg font-semibold text-left">Owner Information</h2>
         </div>
         <div className="grid gap-6 p-4">
           <div className="grid gap-2">

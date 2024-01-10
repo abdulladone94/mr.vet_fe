@@ -32,9 +32,8 @@ const LoginPage = () => {
         router.push('/');
       }
     } catch (error) {
-      console.log(error);
-      toast.error('Something went wrong, Try again later!');
-      setError(error?.response?.data?.message);
+      toast.error(error.response.data.error);
+      setError(error.response.data.error);
     }
     setIsLoading(false);
   };

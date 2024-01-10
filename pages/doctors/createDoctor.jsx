@@ -132,7 +132,7 @@ const createDoctor = () => {
         {(values, formInstance) => {
           return (
             <>
-              <h1 className="mb-10 text-3xl font-semibold">Create Doctor</h1>
+              <h1 className="mb-10 text-3xl font-semibold">Add Doctor</h1>
 
               <TextInputFields
                 name="first_name"
@@ -183,7 +183,7 @@ const createDoctor = () => {
               />
               <TextInputFields
                 name="phone_number"
-                title="Mobile number"
+                title="Mobile Number"
                 required={true}
                 rules={[
                   { required: true, message: 'Mobile Number is required' },
@@ -228,7 +228,7 @@ const createDoctor = () => {
 
               <TextInputFields
                 name="c_password"
-                title="Confirm password"
+                title="Confirm Password"
                 rules={[
                   { required: true, message: 'Confirm Password is required!' },
                   ({ getFieldValue }) => ({
@@ -251,7 +251,7 @@ const createDoctor = () => {
               <Form.Item>
                 <FilledButton
                   variant="primary"
-                  label={isUpdate ? 'Update' : 'Create'}
+                  label={isUpdate ? 'Update' : 'Add'}
                   type="submit"
                   loading={isSubmitting}
                 />

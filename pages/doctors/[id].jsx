@@ -91,24 +91,28 @@ export default function Home() {
     }
   };
 
-  const caseReportComponent = (data) => (
-    <CaseReport
-      profileImage={data.inspection.pet.pet_image_url}
-      name={data.inspection.pet.pet_name}
-      dob={data.inspection.pet.dob}
-      breed={data.inspection.pet.breed.breed_name}
-      species={data.inspection.pet.species.species_name}
-      gender={data.inspection.pet.gender}
-      image={data.inspection.image_url}
-      disease={data.inspection.disease.disease}
-      heatMap={data.inspection.heat_map_url}
-      healthStatus={data.inspection.health_status.health_status}
-      score={data.inspection.domain_confident_score}
-      username={data.inspection.user.username}
-      email={data.inspection.user.email || '-'}
-      button={() => showConfirm(data.id)}
-    />
-  );
+  const caseReportComponent = (data) => {
+    const formatCreatedDate = data.created_at.split('T')[0];
+    return (
+      <CaseReport
+        profileImage={data.inspection.pet.pet_image_url}
+        createdDate={formatCreatedDate}
+        name={data.inspection.pet.pet_name}
+        dob={data.inspection.pet.dob}
+        breed={data.inspection.pet.breed.breed_name}
+        species={data.inspection.pet.species.species_name}
+        gender={data.inspection.pet.gender}
+        image={data.inspection.image_url}
+        disease={data.inspection.disease.disease}
+        heatMap={data.inspection.heat_map_url}
+        healthStatus={data.inspection.health_status.health_status}
+        score={data.inspection.domain_confident_score}
+        username={data.inspection.user.username}
+        email={data.inspection.user.email || '-'}
+        button={() => showConfirm(data.id)}
+      />
+    );
+  };
 
   return (
     <>

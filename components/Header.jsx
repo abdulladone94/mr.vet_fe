@@ -64,16 +64,16 @@ const HeaderSection = () => {
     {
       key: '1',
       label: (
-        <Link onClick={() => handleLogout()} href={'/'}>
-          Log out
+        <Link onClick={() => setIsModalOpen(true)} href={'/'}>
+          Change Password
         </Link>
       ),
     },
     {
       key: '2',
       label: (
-        <Link onClick={() => setIsModalOpen(true)} href={'/'}>
-          Change Password
+        <Link onClick={() => handleLogout()} href={'/'}>
+          Log out
         </Link>
       ),
     },
@@ -159,7 +159,7 @@ const HeaderSection = () => {
         {user ? (
           <div className="flex items-center md:gap-1">
             <Link href={CREATE_DOCTOR_ROUTE}>
-              <FilledButton variant="primary" label="Create Doctor" />
+              <FilledButton variant="primary" label="Add Doctor" />
             </Link>
 
             <Dropdown
@@ -219,14 +219,14 @@ const HeaderSection = () => {
         >
           <TextInputFields
             name="old_password"
-            title="Old password"
+            title="Current Password"
             rules={[{ message: 'Old Password is required!' }]}
             type="password"
           />
 
           <TextInputFields
             name="password"
-            title="New password"
+            title="New Password"
             rules={[
               { message: 'New Password is required!' },
               // { validator: validatePassword },
@@ -236,7 +236,7 @@ const HeaderSection = () => {
 
           <TextInputFields
             name="c_password"
-            title="Confirm password"
+            title="Confirm New Password"
             rules={[
               {
                 message: 'Confirm Password is required!',
