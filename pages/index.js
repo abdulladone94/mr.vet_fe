@@ -7,9 +7,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import api from '@/api';
 import { useDoctors } from '@/context/doctorContext';
-import { Modal, Space } from 'antd';
+import { Modal, Space, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
+import MenuLayout from '@/components/Layout/MenuLayout';
+import Text from '@/components/UI/Text/Typography ';
+import Link from 'next/link';
+import FilledButton from '@/components/UI/Buttons/FilledButton';
+import { CREATE_DOCTOR_ROUTE } from '@/components/constants/routes';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,6 +27,7 @@ export default function Home() {
 
   const router = useRouter();
   const { confirm } = Modal;
+  const { Title } = Typography;
 
   const mapData = (row) => ({
     id: row.id,
@@ -29,8 +35,8 @@ export default function Home() {
     lName: row.last_name,
     email: row.email,
     mobile: row.phone_number,
-    hospital: row.hospital_name,
-    qualification: row.qualifications,
+    // hospital: row.hospital_name,
+    // qualification: row.qualifications,
     registration: row.registration_number,
   });
 
@@ -98,16 +104,16 @@ export default function Home() {
       dataIndex: 'mobile',
       key: 'mobile',
     },
-    {
-      title: 'Hospital Name',
-      dataIndex: 'hospital',
-      key: 'hospital',
-    },
-    {
-      title: 'Qualification',
-      dataIndex: 'qualification',
-      key: 'qualification',
-    },
+    // {
+    //   title: 'Hospital Name',
+    //   dataIndex: 'hospital',
+    //   key: 'hospital',
+    // },
+    // {
+    //   title: 'Qualification',
+    //   dataIndex: 'qualification',
+    //   key: 'qualification',
+    // },
     {
       title: 'Registration No',
       dataIndex: 'registration',
@@ -179,13 +185,25 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main className={styles.main}>
+        <div className="flex justify-between w-full mx-20">
+          <Text title="Manage Doctors" size={2} />
+          <Link href={CREATE_DOCTOR_ROUTE}>
+            <FilledButton variant="primary" label="Add Doctor" />
+          </Link>
+        </div>
+
         <SearchFilters
           setSearchValue={setSearchValue}
           placeholder="Search Doctor"
         />
 
-        <DoctorTable data={data} columns={columns} />
+        <MenuLayout>
+          <DoctorTable data={data} columns={columns} />
+        </MenuLayout>
+
+        {/* <DoctorTable data={data} columns={columns} /> */}
       </main>
     </>
   );
