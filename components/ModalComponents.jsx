@@ -1,11 +1,3 @@
-/*
- * File: ModaComponent.jsx
- * Project: Sharing Sugar
- * Author: Ginthozan Varnakulasingam (ginthozanv@booleanlanbs.biz)
- * File Created: 18 April 2023
- * Copyright 2023 - 2023 Booleanlabs.
- */
-
 import { Alert, Modal } from 'antd';
 
 const ModalComponents = ({
@@ -26,6 +18,9 @@ const ModalComponents = ({
       confirmLoading={confirmLoading}
       closable={false}
       okText="Submit"
+      okButtonProps={{
+        style: { backgroundColor: '#FD9340' },
+      }}
     >
       <div className="mt-5">
         {error && (

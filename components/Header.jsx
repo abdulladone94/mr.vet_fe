@@ -1,9 +1,3 @@
-// import {
-//   CREATE_SUGAR_POST_ROUTE,
-//   LOGIN_ROUTE,
-//   MY_SUGAR_POST_ROUTE,
-//   REGISTER_ROUTE,
-// } from '@/constants/routes';
 import { logout } from '@/utils/auth';
 import { getAuthUser } from '@/utils/auth';
 import { isBrowser } from '@/utils/lib';
@@ -178,7 +172,7 @@ const HeaderSection = () => {
                   // src={user.profile_img_url ?? '/public/mr.vet-login.jpeg'}
                   src={<UserOutlined />}
                   size={38}
-                  className={`${!user.profile_img_url && 'bg-[orange]'}`}
+                  className={`${!user.profile_img_url && 'bg-[#FD9340]'}`}
                 >
                   {/* {user.full_name && user.full_name[0]} */}
                   {'Admin'}
@@ -258,13 +252,7 @@ const HeaderSection = () => {
             type="password"
           />
 
-          <div style={{ display: 'none' }}>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" ref={submitBtnRef}>
-                Submit
-              </Button>
-            </Form.Item>
-          </div>
+          <button type="primary" htmlType="submit" ref={submitBtnRef} />
         </Form>
       </ModalComponents>
     </Header>
