@@ -187,8 +187,8 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <div className="flex justify-between w-full mx-20">
-          <Text title="Manage Doctors" size={2} />
+        <div className="flex items-center justify-between w-full h-10 mx-1 my-5 md:mx-20">
+          <Text title="Manage Doctors" />
           <Link href={CREATE_DOCTOR_ROUTE}>
             <FilledButton variant="primary" label="Add Doctor" />
           </Link>
