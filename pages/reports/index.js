@@ -13,6 +13,7 @@ import Text from '@/components/UI/Text/Typography ';
 import Link from 'next/link';
 import { CREATE_DOCTOR_ROUTE } from '@/components/constants/routes';
 import FilledButton from '@/components/UI/Buttons/FilledButton';
+import { usePathname } from 'next/navigation';
 
 const Cases = () => {
   const [reports, setReports] = useState([]);
@@ -82,7 +83,7 @@ const Cases = () => {
   const handleDelete = async (id) => {
     try {
       await api.report.deleteReport({ id: `${id}` });
-      getReportsByDoctorId();
+      getAllReports();
     } catch (error) {
       console.log(error);
     }

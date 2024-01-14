@@ -155,9 +155,9 @@ const HeaderSection = () => {
 
         {user ? (
           <div className="flex items-center md:gap-1">
-            <Link href={CREATE_DOCTOR_ROUTE}>
+            {/* <Link href={CREATE_DOCTOR_ROUTE}>
               <FilledButton variant="primary" label="Add Doctor" />
-            </Link>
+            </Link> */}
 
             <Dropdown
               className="border-0 shadow-none hover:!text-[#b462d1]"
@@ -184,20 +184,20 @@ const HeaderSection = () => {
               </Button>
             </Dropdown>
           </div>
-        ) : (
-          <Space>
-            <Link href={LOGIN_ROUTE}>
-              <FilledButton variant="primary" label="Login" size="medium" />
-            </Link>
-            {/* <Link href={REGISTER_ROUTE}>
-              <FilledButton
-                variant="secondary"
-                label="Register"
-                size="medium"
-              />
-            </Link> */}
-          </Space>
-        )}
+        ) : null
+        // <Space>
+        //   <Link href={LOGIN_ROUTE}>
+        //     <FilledButton variant="primary" label="Login" size="medium" />
+        //   </Link>
+        //   <Link href={REGISTER_ROUTE}>
+        //     <FilledButton
+        //       variant="secondary"
+        //       label="Register"
+        //       size="medium"
+        //     />
+        //   </Link>
+        // </Space>
+        }
       </div>
       <ModalComponents
         title="Change Password"
