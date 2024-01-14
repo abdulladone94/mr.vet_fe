@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import api from '@/api';
 import { useDoctors } from '@/context/doctorContext';
-import { Modal, Space, Typography } from 'antd';
+import { Button, Modal, Space, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import MenuLayout from '@/components/Layout/MenuLayout';
@@ -35,6 +35,7 @@ export default function Home() {
     lName: row.last_name,
     email: row.email,
     mobile: row.phone_number,
+    reportCount: row.report_count,
     // hospital: row.hospital_name,
     // qualification: row.qualifications,
     registration: row.registration_number,
@@ -87,7 +88,7 @@ export default function Home() {
       title: 'First Name',
       dataIndex: 'fName',
       key: 'name',
-      render: (text, id) => <a href={`/doctors/${id.id}`}>{text}</a>,
+      render: (text, id) => <Link href={`/doctors/${id.id}`}>{text}</Link>,
     },
     {
       title: 'Last Name',
@@ -123,28 +124,33 @@ export default function Home() {
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a
-            onClick={() => {
-              router.push({
-                pathname: '/doctors/createDoctor',
-                query: { doctor: JSON.stringify(record) },
-              });
-            }}
-          >
-            Edit
-          </a>
-          <a
-            onClick={() => {
-              showConfirm(record.id);
-              console.log(record);
-            }}
-          >
-            Delete
-          </a>
-        </Space>
-      ),
+      render: (_, record) => {
+        const disabled = record.reportCount > 0;
+        return (
+          <Space size="middle">
+            <Button
+              onClick={() => {
+                router.push({
+                  pathname: '/doctors/createDoctor',
+                  query: { doctor: JSON.stringify(record) },
+                });
+              }}
+            >
+              Edit
+            </Button>
+            <Button
+              disabled={disabled}
+              onClick={() => {
+                showConfirm(record.id);
+                console.log(record);
+                console.log(allDoctors);
+              }}
+            >
+              Delete
+            </Button>
+          </Space>
+        );
+      },
     },
   ];
 
