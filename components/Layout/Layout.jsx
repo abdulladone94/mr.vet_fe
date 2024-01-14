@@ -1,12 +1,3 @@
-/*
- * File: Layout.jsx
- * Project: Sharing Sugar
- * Author: Ginthozan Varnakulasingam (ginthozanv@booleanlanbs.biz)
- * File Created: 12 April 2023
- * Copyright 2023 - 2023 Booleanlabs.
- */
-
-// import HeaderSection from "@/components/Header";
 import { Breadcrumb, Layout, theme } from 'antd';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
@@ -32,7 +23,7 @@ const AppLayout = ({ children }) => {
       <HeaderSection />
       <div>
         <div className="responsive">
-          {pathname[1] !== '' && pathname[1] !== 'sugar-post' && (
+          {/* {pathname[1] !== '' && pathname[1] !== 'createDoctor' && (
             <Breadcrumb
               className="my-5"
               items={pathname.map((path, i) => ({
@@ -47,7 +38,7 @@ const AppLayout = ({ children }) => {
                 ),
               }))}
             />
-          )}
+          )} */}
         </div>
         <div>{children}</div>
       </div>

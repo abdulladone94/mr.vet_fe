@@ -15,6 +15,7 @@ import TextInputFields from './UI/InputFields/TextInputFields';
 import { useDoctors } from '@/context/doctorContext';
 import api from '@/api';
 import toast from 'react-hot-toast';
+import { useUser } from '@/context/userContext';
 
 const { Header } = Layout;
 
@@ -38,7 +39,7 @@ const { Header } = Layout;
 // };
 
 const HeaderSection = () => {
-  const [user, setUser] = useState(getAuthUser());
+  // const [user, setUser] = useState(getAuthUser());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordError, setPasswordError] = useState(null);
@@ -47,6 +48,8 @@ const HeaderSection = () => {
   const submitBtnRef = useRef();
 
   const { setSearchValue } = useDoctors();
+  const { user, setUser } = useUser();
+  // console.log(user);
 
   const handleLogout = () => {
     logout();
@@ -73,23 +76,23 @@ const HeaderSection = () => {
     },
   ];
 
-  useEffect(() => {
-    const handleStorageChange = (event) => {
-      if (event) {
-        setUser(getAuthUser());
-      }
-    };
+  // useEffect(() => {
+  //   const handleStorageChange = (event) => {
+  //     if (event) {
+  //       setUser(getAuthUser());
+  //     }
+  //   };
 
-    if (isBrowser()) {
-      window.addEventListener('storage', handleStorageChange);
-    }
+  //   if (isBrowser()) {
+  //     window.addEventListener('storage', handleStorageChange);
+  //   }
 
-    return () => {
-      if (isBrowser()) {
-        window.removeEventListener('storage', handleStorageChange);
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (isBrowser()) {
+  //       window.removeEventListener('storage', handleStorageChange);
+  //     }
+  //   };
+  // }, []);
 
   const onChangePassword = async (values) => {
     console.log(values);

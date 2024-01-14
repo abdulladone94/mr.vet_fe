@@ -11,11 +11,14 @@ import { useState } from 'react';
 import TextInputFields from '@/components/UI/InputFields/TextInputFields';
 import FilledButton from '@/components/UI/Buttons/FilledButton';
 import toast from 'react-hot-toast';
+import { useUser } from '@/context/userContext';
 
 const LoginPage = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const { setUser } = useUser();
 
   const onFinish = async (values) => {
     setIsLoading(true);
@@ -28,12 +31,13 @@ const LoginPage = () => {
       const { data } = await api.auth.login(body);
       if (data.accesToken !== '') {
         setAuth(data);
+        setUser(data);
         toast.success('Logged in successfully');
         router.push('/');
       }
     } catch (error) {
-      toast.error(error.response.data.error);
-      setError(error.response.data.error);
+      toast.error(error.response?.data?.error);
+      setError(error.response?.data?.error);
     }
     setIsLoading(false);
   };
