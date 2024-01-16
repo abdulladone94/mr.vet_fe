@@ -18,7 +18,8 @@ export default function CaseReport({
   score,
   username,
   email,
-
+  doctorFirst,
+  doctorLast,
   button,
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,6 +40,7 @@ export default function CaseReport({
           <h2 className="text-lg font-semibold">
             Pet Information
             <p className="text-sm">{createdDate}</p>
+            <p className="text-sm">{doctorFirst + ' ' + doctorLast}</p>
           </h2>
           <img
             alt="Pet Image"
@@ -84,7 +86,7 @@ export default function CaseReport({
             <div>
               <p className="font-light">Uploaded Image</p>
               <Link
-                href={'/reports'}
+                href={'/cases'}
                 onClick={() => {
                   openModal(image, 'Uploaded Image');
                 }}
@@ -101,7 +103,7 @@ export default function CaseReport({
             <div>
               <p className="font-light">Analyzed Image</p>
               <Link
-                href={'/reports'}
+                href={'/cases'}
                 onClick={() => {
                   openModal(heatMap, 'Analyzed Image');
                 }}

@@ -107,6 +107,8 @@ const Cases = () => {
       <CaseReport
         profileImage={data.inspection.pet.pet_image_url}
         createdDate={formatCreatedDate}
+        doctorFirst={data.doctor.first_name}
+        doctorLast={data.doctor.last_name}
         name={data.inspection.pet.pet_name}
         dob={data.inspection.pet.dob}
         breed={data.inspection.pet.breed.breed_name}
