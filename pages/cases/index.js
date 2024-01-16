@@ -8,7 +8,7 @@ import styles from '@/styles/Home.module.css';
 import Head from 'next/head';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import { Modal } from 'antd';
+import { Modal, Pagination } from 'antd';
 import Text from '@/components/UI/Text/Typography ';
 import Link from 'next/link';
 import { CREATE_DOCTOR_ROUTE } from '@/components/constants/routes';
@@ -21,26 +21,30 @@ const Cases = () => {
   const [searchReportsRes, setSearchReportsRes] = useState([]);
   // const { searchValue, setSearchValue } = useDoctors();
 
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+
   const isSearchValue =
     !!searchValues.fromDate ||
     !!searchValues.name ||
     !!searchValues.healthStatus;
   const { confirm } = Modal;
 
-  const getAllReports = async () => {
+  const getAllReports = async (pageSize) => {
     try {
       const response = await api.report.reportByDoctorId({
         // id: doctorId,
-        pageNo: '1',
-        noOfItem: '10',
+        pageNo: page,
+        noOfItem: '3',
       });
       setReports(response.data.results || []);
+      setTotal(response.data.count);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const searchRepors = async () => {
+  const searchReports = async () => {
     try {
       const response = await api.report.searchReports({
         ...searchValues,
@@ -48,6 +52,7 @@ const Cases = () => {
         noOfItem: 10,
       });
       setSearchReportsRes(response.data.results || []);
+      setTotal(response.data.count);
     } catch (error) {
       console.log(error);
     }
@@ -59,12 +64,12 @@ const Cases = () => {
   }, []);
 
   useEffect(() => {
-    searchRepors();
+    searchReports();
   }, [searchValues]);
 
   const showConfirm = (id) => {
     confirm({
-      title: 'Are you want to delete this report?',
+      title: 'Do you want to delete this case?',
       icon: <ExclamationCircleFilled />,
       okText: 'Yes',
       cancelText: 'No',
@@ -88,6 +93,13 @@ const Cases = () => {
       console.log(error);
     }
   };
+
+  const onChange = (page) => {
+    setPage(page);
+  };
+  useEffect(() => {
+    getAllReports();
+  }, [page]);
 
   const caseReportComponent = (data) => {
     const formatCreatedDate = data.created_at.split('T')[0];
@@ -122,10 +134,10 @@ const Cases = () => {
       </Head>
       <main className={styles.main}>
         <div className="flex items-center justify-between w-full h-10 mx-1 my-5 md:mx-20">
-          <Text title="Manage Reports" />
-          <Link href={CREATE_DOCTOR_ROUTE}>
+          <Text title="Manage Cases" />
+          {/* <Link href={CREATE_DOCTOR_ROUTE}>
             <FilledButton variant="primary" label="Add Doctor" />
-          </Link>
+          </Link> */}
         </div>
         <MultiSearchFilter setSearchValues={setSearchValues} />
 
@@ -135,6 +147,16 @@ const Cases = () => {
               ? searchReportsRes?.map(caseReportComponent)
               : reports?.map(caseReportComponent)}
           </div>
+          {reports?.length > 0 && (
+            <div className="flex justify-end mt-10">
+              <Pagination
+                pageSize={3}
+                current={page}
+                total={total}
+                onChange={onChange}
+              />
+            </div>
+          )}
         </MenuLayout>
 
         {/* <DoctorTable data={data} columns={columns} /> */}

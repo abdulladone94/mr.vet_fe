@@ -23,10 +23,10 @@ const items = [
     label: (
       <>
         <ProfileOutlined className="mr-3" />
-        Reports
+        Cases
       </>
     ),
-    path: '/reports',
+    path: '/cases',
   },
 ];
 
@@ -43,7 +43,7 @@ const MenuLayout = ({ children }) => {
           onChange={(e) => router.push(e)}
           options={[
             { value: '/', label: 'Doctors' },
-            { value: '/reports', label: 'Reports' },
+            { value: '/cases', label: 'Cases' },
           ]}
         />
       </div>
