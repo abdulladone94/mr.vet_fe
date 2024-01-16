@@ -153,50 +153,51 @@ const HeaderSection = () => {
           />
         </Link>
 
-        {user ? (
-          <div className="flex items-center md:gap-1">
-            {/* <Link href={CREATE_DOCTOR_ROUTE}>
+        {
+          user ? (
+            <div className="flex items-center md:gap-1">
+              {/* <Link href={CREATE_DOCTOR_ROUTE}>
               <FilledButton variant="primary" label="Add Doctor" />
             </Link> */}
 
-            <Dropdown
-              className="border-0 shadow-none hover:!text-[#b462d1]"
-              menu={{
-                items,
-              }}
-              placement="bottomLeft"
-              arrow
-            >
-              <Button className="flex items-center gap-2">
-                <p className="!hidden md:!block font-bold   whitespace-pre-wrap overflow-hidden text-right leading-4 break-words max-w-[120px]">
-                  {user.full_name}
-                </p>
-                <Avatar
-                  // src={user.profile_img_url ?? '/public/mr.vet-login.jpeg'}
-                  src={<UserOutlined />}
-                  size={38}
-                  className={`${!user.profile_img_url && 'bg-[#FD9340]'}`}
-                >
-                  {/* {user.full_name && user.full_name[0]} */}
-                  {'Admin'}
-                </Avatar>
-                <DownOutlined />
-              </Button>
-            </Dropdown>
-          </div>
-        ) : null
-        // <Space>
-        //   <Link href={LOGIN_ROUTE}>
-        //     <FilledButton variant="primary" label="Login" size="medium" />
-        //   </Link>
-        //   <Link href={REGISTER_ROUTE}>
-        //     <FilledButton
-        //       variant="secondary"
-        //       label="Register"
-        //       size="medium"
-        //     />
-        //   </Link>
-        // </Space>
+              <Dropdown
+                className="border-0 shadow-none hover:!text-[#b462d1]"
+                menu={{
+                  items,
+                }}
+                placement="bottomLeft"
+                arrow
+              >
+                <Button className="flex items-center gap-2">
+                  <p className="!hidden md:!block font-bold   whitespace-pre-wrap overflow-hidden text-right leading-4 break-words max-w-[120px]">
+                    {user.full_name}
+                  </p>
+                  <Avatar
+                    // src={user.profile_img_url ?? '/public/mr.vet-login.jpeg'}
+                    src={<UserOutlined />}
+                    size={38}
+                    className={`${!user.profile_img_url && 'bg-[#FD9340]'}`}
+                  >
+                    {/* {user.full_name && user.full_name[0]} */}
+                    {'Admin'}
+                  </Avatar>
+                  <DownOutlined />
+                </Button>
+              </Dropdown>
+            </div>
+          ) : null
+          // <Space>
+          //   <Link href={LOGIN_ROUTE}>
+          //     <FilledButton variant="primary" label="Login" size="medium" />
+          //   </Link>
+          //   <Link href={REGISTER_ROUTE}>
+          //     <FilledButton
+          //       variant="secondary"
+          //       label="Register"
+          //       size="medium"
+          //     />
+          //   </Link>
+          // </Space>
         }
       </div>
       <ModalComponents
@@ -204,6 +205,7 @@ const HeaderSection = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={() => setIsModalOpen(false)}
         handleOkClick={() => submitBtnRef.current.click()}
+        okText="submit"
         confirmLoading={passwordLoading}
         error={passwordError}
       >

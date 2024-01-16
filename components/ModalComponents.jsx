@@ -8,6 +8,7 @@ const ModalComponents = ({
   confirmLoading,
   error,
   children,
+  okText,
 }) => {
   return (
     <Modal
@@ -17,7 +18,7 @@ const ModalComponents = ({
       onCancel={setIsModalOpen}
       confirmLoading={confirmLoading}
       closable={false}
-      okText="Submit"
+      okText={okText}
       okButtonProps={{
         style: { backgroundColor: '#FD9340' },
       }}

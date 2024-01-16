@@ -1,4 +1,7 @@
+import Link from 'next/link';
 import FilledButton from '../UI/Buttons/FilledButton';
+import { useState } from 'react';
+import ModalComponents from '../ModalComponents';
 
 export default function CaseReport({
   profileImage,
@@ -18,6 +21,17 @@ export default function CaseReport({
 
   button,
 }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState(null);
+  const [modalTitle, setModalTitle] = useState('');
+
+  const openModal = (image, title) => {
+    setModalImage(image);
+    setModalTitle(title);
+    setIsModalOpen(true);
+    console.log(modalImage);
+  };
+  console.log(modalImage);
   return (
     <div className="flex flex-col gap-8">
       <div className="overflow-hidden rounded-lg shadow-lg border-[#FD9340] border-2">
@@ -69,23 +83,37 @@ export default function CaseReport({
           <div className="grid grid-cols-2 gap-2">
             <div>
               <p className="font-light">Uploaded Image</p>
-              <img
-                alt="Pet Image"
-                className="aspect-[1/1] object-cover w-full"
-                height="200"
-                src={image}
-                width="200"
-              />
+              <Link
+                href={'/reports'}
+                onClick={() => {
+                  openModal(image, 'Uploaded Image');
+                }}
+              >
+                <img
+                  alt="Pet Image"
+                  className="aspect-[1/1] object-cover w-full"
+                  height="200"
+                  src={image}
+                  width="200"
+                />
+              </Link>
             </div>
             <div>
               <p className="font-light">Analyzed Image</p>
-              <img
-                alt="Heat Map Image"
-                className="aspect-[1/1] object-cover w-full"
-                height="200"
-                src={heatMap}
-                width="200"
-              />
+              <Link
+                href={'/reports'}
+                onClick={() => {
+                  openModal(heatMap, 'Analyzed Image');
+                }}
+              >
+                <img
+                  alt="Heat Map Image"
+                  className="aspect-[1/1] object-cover w-full"
+                  height="200"
+                  src={heatMap}
+                  width="200"
+                />
+              </Link>
             </div>
           </div>
           <div className="grid gap-2">
@@ -138,6 +166,28 @@ export default function CaseReport({
             onClick={button}
           />
         </div>
+        {modalTitle && (
+          <ModalComponents
+            title={modalTitle}
+            // title="Uploaded Image"
+            isModalOpen={isModalOpen}
+            setIsModalOpen={() => setIsModalOpen(false)}
+            // okText="ok"
+            // handleOkClick={false}
+            // confirmLoading={passwordLoading}
+            // error={passwordError}
+          >
+            {modalImage && (
+              <img
+                alt="Pet Image"
+                className="aspect-[1/1] object-cover w-full"
+                height="200"
+                src={modalImage}
+                width="200"
+              />
+            )}
+          </ModalComponents>
+        )}
       </div>
     </div>
 
