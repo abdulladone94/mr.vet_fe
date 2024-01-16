@@ -66,7 +66,7 @@ export default function Home() {
 
   const showConfirm = (id) => {
     confirm({
-      title: 'Are you want to delete this case?',
+      title: 'Do you want to delete this report?',
       icon: <ExclamationCircleFilled />,
       okText: 'Yes',
       cancelText: 'No',

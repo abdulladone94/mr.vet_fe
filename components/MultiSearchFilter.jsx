@@ -62,7 +62,7 @@ const MultiSearchFilter = ({ setSearchValues }) => {
             <Input
               className="w-[308px] xl:w-[546px] md:w-[320px] rounded-md h-10"
               style={{ width: '300px' }}
-              placeholder="Search Cases"
+              placeholder="Search doctor"
               // value={form.getFieldValue('searchText')}
               // onChange={(e) =>
               //   form.setFieldsValue({ searchText: e.target.value })
