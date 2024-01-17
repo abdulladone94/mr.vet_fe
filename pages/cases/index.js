@@ -136,7 +136,7 @@ const Cases = () => {
       </Head>
       <main className={styles.main}>
         <div className="flex items-center justify-between w-full h-10 mx-1 my-5 md:mx-20">
-          <Text title="Manage Cases" />
+          <Text title={`Manage Cases - ${total}`} />
           {/* <Link href={CREATE_DOCTOR_ROUTE}>
             <FilledButton variant="primary" label="Add Doctor" />
           </Link> */}

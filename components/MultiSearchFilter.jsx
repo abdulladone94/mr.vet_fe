@@ -1,17 +1,40 @@
 import { Button, Form, Input, DatePicker, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
+import api from '@/api';
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY/MM/DD';
 
 const MultiSearchFilter = ({ setSearchValues }) => {
+  const [allDoctors, setAllDoctors] = useState([]);
+  console.log(allDoctors);
+
+  const getAllDoctors = async (pageSize) => {
+    try {
+      const response = await api.doctor.getAllDoctors({
+        // pageNo: page,
+        // noOfItem: pageSize,
+        pageNo: '1',
+        noOfItem: '10000',
+      });
+      setAllDoctors(response.data.results || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllDoctors();
+  }, []);
+
   const onFinish = (values) => {
     console.log(values);
     // console.log(values.dateRange[0].format('YYYY-MM-DD'));
     setSearchValues({
       toDate: values.dateRange?.[1]?.format('YYYY-MM-DD'),
       fromDate: values.dateRange?.[0]?.format('YYYY-MM-DD'),
-      name: values.searchText,
+      name: values.doctor,
       healthStatus: values.healthStatus,
     });
   };
@@ -38,16 +61,7 @@ const MultiSearchFilter = ({ setSearchValues }) => {
                   label: 'Not Normal',
                 },
               ]}
-            >
-              {/* {locations?.map((location) => (
-                <Select.Option
-                  key={location.locationId}
-                  value={location.locationId}
-                >
-                  {location.locationName}
-                </Select.Option>
-              ))} */}
-            </Select>
+            ></Select>
           </Form.Item>
 
           <Form.Item name="dateRange">
@@ -58,18 +72,28 @@ const MultiSearchFilter = ({ setSearchValues }) => {
               format={dateFormat}
             />
           </Form.Item>
-          <Form.Item name="searchText">
-            <Input
-              className="w-[308px] xl:w-[546px] md:w-[320px] rounded-md h-10"
-              style={{ width: '300px' }}
-              placeholder="Search doctor"
-              // value={form.getFieldValue('searchText')}
-              // onChange={(e) =>
-              //   form.setFieldsValue({ searchText: e.target.value })
-              // }
+
+          {/* <div className="relative shrink-0 w-full sm:w-[200px]"> */}
+          <Form.Item name="doctor" className="m-0">
+            <Select
+              placeholder="Select doctor"
+              className="pl-6 w-[308px]  md:w-[320px]"
+              size={'large'}
               allowClear
-            />
+              style={{
+                width: 308,
+              }}
+              // showArrow={false}
+              // bordered={false}
+            >
+              {allDoctors?.map((doctor) => (
+                <Select.Option key={doctor.id} value={doctor.first_name}>
+                  {doctor.first_name + ' ' + doctor.last_name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
+
           <Form.Item>
             <Button
               htmlType="submit"
