@@ -86,11 +86,13 @@ const MultiSearchFilter = ({ setSearchValues }) => {
               // showArrow={false}
               // bordered={false}
             >
-              {allDoctors?.map((doctor) => (
-                <Select.Option key={doctor.id} value={doctor.first_name}>
-                  {doctor.first_name + ' ' + doctor.last_name}
-                </Select.Option>
-              ))}
+              {allDoctors
+                ?.sort((a, b) => a.first_name.localeCompare(b.first_name))
+                .map((doctor) => (
+                  <Select.Option key={doctor.id} value={doctor.first_name}>
+                    {doctor.first_name + ' ' + doctor.last_name}
+                  </Select.Option>
+                ))}
             </Select>
           </Form.Item>
 
