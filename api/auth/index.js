@@ -7,4 +7,8 @@ export default (axios, endpoint) => ({
     const data = await axios.post(`${endpoint}/register`, body);
     return data;
   },
+  changePassword: async (body) => {
+    const data = await axios.patch(`${endpoint}/password/reset`, body);
+    return data;
+  },
 });

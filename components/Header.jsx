@@ -1,9 +1,3 @@
-// import {
-//   CREATE_SUGAR_POST_ROUTE,
-//   LOGIN_ROUTE,
-//   MY_SUGAR_POST_ROUTE,
-//   REGISTER_ROUTE,
-// } from '@/constants/routes';
 import { logout } from '@/utils/auth';
 import { getAuthUser } from '@/utils/auth';
 import { isBrowser } from '@/utils/lib';
@@ -14,35 +8,38 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import FilledButton from './UI/Buttons/FilledButton';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { CREATE_DOCTOR_ROUTE, LOGIN_ROUTE } from './constants/routes';
 import ModalComponents from './ModalComponents';
 import TextInputFields from './UI/InputFields/TextInputFields';
 import { useDoctors } from '@/context/doctorContext';
+import api from '@/api';
+import toast from 'react-hot-toast';
+import { useUser } from '@/context/userContext';
 
 const { Header } = Layout;
 
-const validatePassword = (rule, value) => {
-  return new Promise((resolve, reject) => {
-    const charRegex = /[a-zA-Z]/;
-    const specialCharRegex = /(?=.*[!@#$%^&*])/;
+// const validatePassword = (rule, value) => {
+//   return new Promise((resolve, reject) => {
+//     const charRegex = /[a-zA-Z]/;
+//     const specialCharRegex = /(?=.*[!@#$%^&*])/;
 
-    if (!value) {
-      resolve();
-    } else if (value.length < 8) {
-      reject('Your password must be at least 8 characters');
-    } else if (!charRegex.test(value)) {
-      reject('Your password must contain at least one letter.');
-    } else if (!specialCharRegex.test(value)) {
-      reject('Your password must contain at least one special letter.');
-    } else {
-      resolve();
-    }
-  });
-};
+//     if (!value) {
+//       resolve();
+//     } else if (value.length < 8) {
+//       reject('Your password must be at least 8 characters');
+//     } else if (!charRegex.test(value)) {
+//       reject('Your password must contain at least one letter.');
+//     } else if (!specialCharRegex.test(value)) {
+//       reject('Your password must contain at least one special letter.');
+//     } else {
+//       resolve();
+//     }
+//   });
+// };
 
 const HeaderSection = () => {
-  const [user, setUser] = useState(getAuthUser());
+  // const [user, setUser] = useState(getAuthUser());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordError, setPasswordError] = useState(null);
@@ -50,7 +47,9 @@ const HeaderSection = () => {
   const [form] = Form.useForm();
   const submitBtnRef = useRef();
 
-  // const { setSearchValue } = useDoctors();
+  const { setSearchValue } = useDoctors();
+  const { user, setUser } = useUser();
+  // console.log(user);
 
   const handleLogout = () => {
     logout();
@@ -62,40 +61,41 @@ const HeaderSection = () => {
     {
       key: '1',
       label: (
-        <Link onClick={() => handleLogout()} href={'/'}>
-          Log out
+        <Link onClick={() => setIsModalOpen(true)} href={'/'}>
+          Change Password
         </Link>
       ),
     },
     {
       key: '2',
       label: (
-        <Link onClick={() => setIsModalOpen(true)} href={'/'}>
-          Change Password
+        <Link onClick={() => handleLogout()} href={'/'}>
+          Log out
         </Link>
       ),
     },
   ];
 
-  useEffect(() => {
-    const handleStorageChange = (event) => {
-      if (event) {
-        setUser(getAuthUser());
-      }
-    };
+  // useEffect(() => {
+  //   const handleStorageChange = (event) => {
+  //     if (event) {
+  //       setUser(getAuthUser());
+  //     }
+  //   };
 
-    if (isBrowser()) {
-      window.addEventListener('storage', handleStorageChange);
-    }
+  //   if (isBrowser()) {
+  //     window.addEventListener('storage', handleStorageChange);
+  //   }
 
-    return () => {
-      if (isBrowser()) {
-        window.removeEventListener('storage', handleStorageChange);
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (isBrowser()) {
+  //       window.removeEventListener('storage', handleStorageChange);
+  //     }
+  //   };
+  // }, []);
 
   const onChangePassword = async (values) => {
+    console.log(values);
     setPasswordLoading(true);
     try {
       const body = {
@@ -104,7 +104,7 @@ const HeaderSection = () => {
         userNameByAccessToken: null,
       };
 
-      const res = await api.user.changePassword(body);
+      const res = await api.auth.changePassword(body);
 
       if (res.data.status === '404') {
         toast.error('Your old password is incorrect!');
@@ -112,8 +112,9 @@ const HeaderSection = () => {
         toast.success('Password changed successfully!');
 
         setIsModalOpen(false);
-        fetchUserDetails();
+        // fetchUserDetails();
         form.resetFields();
+        handleLogout();
       }
     } catch (error) {
       toast.error('Something went wrong!');
@@ -126,7 +127,7 @@ const HeaderSection = () => {
     <Header className="bg-white rounded-b-2xl shadow-xl h-16 !p-0 z-50">
       <div className="flex items-center justify-between px-5 md:px-10">
         <Link
-          // onClick={() => setSearchValue('1')}
+          onClick={() => setSearchValue('')}
           href="/"
           className="hidden h-auto leading-none md:block"
         >
@@ -136,7 +137,7 @@ const HeaderSection = () => {
             height={720}
             alt="logo"
             priority={true}
-            className="w-[150px] md:w-[220px] object-contain h-[64px]"
+            className="w-[150px] md:w-[220px] object-contain h-[64px] ml-16 pl-10"
           />
         </Link>
 
@@ -152,55 +153,59 @@ const HeaderSection = () => {
           />
         </Link>
 
-        {user ? (
-          <div className="flex items-center md:gap-1">
-            <Link href={CREATE_DOCTOR_ROUTE}>
-              <FilledButton variant="primary" label="Create Doctor" />
-            </Link>
-
-            <Dropdown
-              className="border-0 shadow-none hover:!text-[#b462d1]"
-              menu={{
-                items,
-              }}
-              placement="bottomLeft"
-              arrow
-            >
-              <Button className="flex items-center gap-2">
-                <p className="!hidden md:!block font-bold   whitespace-pre-wrap overflow-hidden text-right leading-4 break-words max-w-[120px]">
-                  {user.full_name}
-                </p>
-                <Avatar
-                  src={user.profile_img_url ?? null}
-                  size={38}
-                  className={`${!user.profile_img_url && 'bg-[orange]'}`}
-                >
-                  {user.full_name && user.full_name[0]}
-                </Avatar>
-                <DownOutlined />
-              </Button>
-            </Dropdown>
-          </div>
-        ) : (
-          <Space>
-            <Link href={LOGIN_ROUTE}>
-              <FilledButton variant="primary" label="Login" size="medium" />
-            </Link>
-            {/* <Link href={REGISTER_ROUTE}>
-              <FilledButton
-                variant="secondary"
-                label="Register"
-                size="medium"
-              />
+        {
+          user ? (
+            <div className="flex items-center md:gap-1">
+              {/* <Link href={CREATE_DOCTOR_ROUTE}>
+              <FilledButton variant="primary" label="Add Doctor" />
             </Link> */}
-          </Space>
-        )}
+
+              <Dropdown
+                className="border-0 shadow-none hover:!text-[#b462d1]"
+                menu={{
+                  items,
+                }}
+                placement="bottomLeft"
+                arrow
+              >
+                <Button className="flex items-center gap-2">
+                  <p className="!hidden md:!block font-bold   whitespace-pre-wrap overflow-hidden text-right leading-4 break-words max-w-[120px]">
+                    {user.full_name}
+                  </p>
+                  <Avatar
+                    // src={user.profile_img_url ?? '/public/mr.vet-login.jpeg'}
+                    src={<UserOutlined />}
+                    size={38}
+                    className={`${!user.profile_img_url && 'bg-[#FD9340]'}`}
+                  >
+                    {/* {user.full_name && user.full_name[0]} */}
+                    {'Admin'}
+                  </Avatar>
+                  <DownOutlined />
+                </Button>
+              </Dropdown>
+            </div>
+          ) : null
+          // <Space>
+          //   <Link href={LOGIN_ROUTE}>
+          //     <FilledButton variant="primary" label="Login" size="medium" />
+          //   </Link>
+          //   <Link href={REGISTER_ROUTE}>
+          //     <FilledButton
+          //       variant="secondary"
+          //       label="Register"
+          //       size="medium"
+          //     />
+          //   </Link>
+          // </Space>
+        }
       </div>
       <ModalComponents
         title="Change Password"
         isModalOpen={isModalOpen}
         setIsModalOpen={() => setIsModalOpen(false)}
         handleOkClick={() => submitBtnRef.current.click()}
+        okText="submit"
         confirmLoading={passwordLoading}
         error={passwordError}
       >
@@ -213,24 +218,24 @@ const HeaderSection = () => {
         >
           <TextInputFields
             name="old_password"
-            title="Old password"
+            title="Current Password"
             rules={[{ message: 'Old Password is required!' }]}
             type="password"
           />
 
           <TextInputFields
             name="password"
-            title="New password"
+            title="New Password"
             rules={[
               { message: 'New Password is required!' },
-              { validator: validatePassword },
+              // { validator: validatePassword },
             ]}
             type="password"
           />
 
           <TextInputFields
             name="c_password"
-            title="Confirm password"
+            title="Confirm New Password"
             rules={[
               {
                 message: 'Confirm Password is required!',
@@ -252,13 +257,7 @@ const HeaderSection = () => {
             type="password"
           />
 
-          <div style={{ display: 'none' }}>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" ref={submitBtnRef}>
-                Submit
-              </Button>
-            </Form.Item>
-          </div>
+          <button type="primary" htmlType="submit" ref={submitBtnRef} />
         </Form>
       </ModalComponents>
     </Header>

@@ -7,7 +7,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import api from '@/api';
 import { useDoctors } from '@/context/doctorContext';
-import { Modal, Space } from 'antd';
+import { Button, Modal, Space, Typography } from 'antd';
+import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
+import MenuLayout from '@/components/Layout/MenuLayout';
+import Text from '@/components/UI/Text/Typography ';
+import Link from 'next/link';
+import FilledButton from '@/components/UI/Buttons/FilledButton';
+import { CREATE_DOCTOR_ROUTE } from '@/components/constants/routes';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,7 +24,10 @@ export default function Home() {
   const [searchRes, setSearchRes] = useState([]);
 
   const { searchValue, setSearchValue } = useDoctors();
+
+  const router = useRouter();
   const { confirm } = Modal;
+  const { Title } = Typography;
 
   const mapData = (row) => ({
     id: row.id,
@@ -25,8 +35,9 @@ export default function Home() {
     lName: row.last_name,
     email: row.email,
     mobile: row.phone_number,
-    hospital: row.hospital_name,
-    qualification: row.qualifications,
+    reportCount: row.report_count,
+    // hospital: row.hospital_name,
+    // qualification: row.qualifications,
     registration: row.registration_number,
   });
 
@@ -35,7 +46,7 @@ export default function Home() {
     try {
       const response = await api.doctor.getAllDoctors({
         pageNo: '1',
-        noOfItem: '8',
+        noOfItem: '10000',
       });
       setAllDoctors(response.data.results?.map(mapData) || []);
     } catch (error) {
@@ -50,7 +61,7 @@ export default function Home() {
         const response = await api.doctor.searchDoctor({
           name: searchValue,
           pageNo: '1',
-          noOfItem: '10',
+          noOfItem: '10000',
         });
         setSearchRes(response.data.results?.map(mapData) || []);
       } catch (error) {
@@ -77,7 +88,7 @@ export default function Home() {
       title: 'First Name',
       dataIndex: 'fName',
       key: 'name',
-      render: (text, id) => <a href={`/doctors/${id.id}`}>{text}</a>,
+      render: (text, id) => <Link href={`/doctors/${id.id}`}>{text}</Link>,
     },
     {
       title: 'Last Name',
@@ -94,16 +105,16 @@ export default function Home() {
       dataIndex: 'mobile',
       key: 'mobile',
     },
-    {
-      title: 'Hospital Name',
-      dataIndex: 'hospital',
-      key: 'hospital',
-    },
-    {
-      title: 'Qualification',
-      dataIndex: 'qualification',
-      key: 'qualification',
-    },
+    // {
+    //   title: 'Hospital Name',
+    //   dataIndex: 'hospital',
+    //   key: 'hospital',
+    // },
+    // {
+    //   title: 'Qualification',
+    //   dataIndex: 'qualification',
+    //   key: 'qualification',
+    // },
     {
       title: 'Registration No',
       dataIndex: 'registration',
@@ -113,31 +124,45 @@ export default function Home() {
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a>Edit</a>
-          <a
-            onClick={() => {
-              showConfirm(record.id);
-              console.log(record);
-            }}
-          >
-            Delete
-          </a>
-        </Space>
-      ),
+      render: (_, record) => {
+        const disabled = record.reportCount > 0;
+        return (
+          <Space size="middle">
+            <Button
+              onClick={() => {
+                router.push({
+                  pathname: '/doctors/createDoctor',
+                  query: { doctor: JSON.stringify(record) },
+                });
+              }}
+            >
+              Edit
+            </Button>
+            <Button
+              disabled={disabled}
+              onClick={() => {
+                showConfirm(record.id);
+                console.log(record);
+                console.log(allDoctors);
+              }}
+            >
+              Delete
+            </Button>
+          </Space>
+        );
+      },
     },
   ];
 
   const showConfirm = (id) => {
     confirm({
-      title: 'Do you want to delete this Doctor?',
+      title: 'Do you want to delete this doctor?',
       icon: <ExclamationCircleFilled />,
       okText: 'Yes',
       cancelText: 'No',
       okButtonProps: {
         style: {
-          backgroundColor: '#7D2B9A',
+          backgroundColor: '#f7a360',
           color: 'white',
         },
       },
@@ -150,8 +175,10 @@ export default function Home() {
   const handleDelete = async (id) => {
     try {
       await api.doctor.deleteDoctor({ id: `${id}` });
+      toast.success('Doctor deleted successfully');
       getAllDoctors();
     } catch (error) {
+      toast.error('Something went wrong, Try again later!');
       console.log(error);
     }
   };
@@ -164,13 +191,23 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main className={styles.main}>
+        <div className="flex items-center justify-between w-full h-10 mx-1 my-5 md:mx-20">
+          <Text title="Manage Doctors" />
+          <Link href={CREATE_DOCTOR_ROUTE}>
+            <FilledButton variant="primary" label="Add Doctor" />
+          </Link>
+        </div>
+
         <SearchFilters
           setSearchValue={setSearchValue}
-          placeholder="Search Doctor"
+          placeholder="Search doctor"
         />
 
-        <DoctorTable data={data} columns={columns} />
+        <MenuLayout>
+          <DoctorTable data={data} columns={columns} />
+        </MenuLayout>
       </main>
     </>
   );

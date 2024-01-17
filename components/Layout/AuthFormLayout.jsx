@@ -1,11 +1,3 @@
-/*
- * File: AuthFormLayout.jsx
- * Project: Sharing Sugar
- * Author: Ginthozan Varnakulasingam (ginthozanv@booleanlanbs.biz)
- * File Created: 25 April 2023
- * Copyright 2023 - 2023 Booleanlabs.
- */
-
 import { Typography, Row, Alert } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -28,20 +20,20 @@ const AuthFormLayout = ({ title, image, error, children, successMessage }) => {
       <div className="flex items-center justify-center">
         <div className="flex flex-col w-full max-w-md m-5 lg:mx-auto">
           <div className="mb-5 text-left lg:mb-10">
-            <Link href="/" className="h-auto leading-none">
+            {/* <Link href="/" className="flex justify-center h-auto">
               <Image
-                src="/mr.vet_logo.png"
+                src="/vet_logo.png"
                 width={720}
                 height={720}
                 alt="logo"
                 priority={true}
                 className="w-[150px] object-contain h-auto"
               />
-            </Link>
+            </Link> */}
             <div className="flex flex-col justify-start mt-5">
               <h1 className="text-3xl lg:text-4xl">{title}</h1>
               <Text className="mt-2" type="secondary">
-                Treating your pet is a treat
+                Care for your furry friend, anytime, anywhere.
               </Text>
             </div>
           </div>

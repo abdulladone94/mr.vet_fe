@@ -1,72 +1,68 @@
-import Head from 'next/head';
-import { Inter } from 'next/font/google';
-import styles from '@/styles/Home.module.css';
-import { Modal, Space, Typography } from 'antd';
-import DateSearchFilters from '@/components/DateSearchFilter';
-import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import api from '@/api';
-import { ExclamationCircleFilled } from '@ant-design/icons';
 import CaseReport from '@/components/Card/CasesReport';
+import MenuLayout from '@/components/Layout/MenuLayout';
+import MultiSearchFilter from '@/components/MultiSearchFilter';
+import styles from '@/styles/Home.module.css';
+import Head from 'next/head';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Modal, Pagination } from 'antd';
+import Text from '@/components/UI/Text/Typography ';
 
-const inter = Inter({ subsets: ['latin'] });
-
-export default function Home() {
+const Cases = () => {
   const [reports, setReports] = useState([]);
-  const [searchReportsRes, setSearchReportsRes] = useState();
-  const [loading, setLoading] = useState(true);
-  const [searchDate, setSearchDate] = useState({});
+  const [searchValues, setSearchValues] = useState({});
+  const [searchReportsRes, setSearchReportsRes] = useState([]);
 
-  const isDateValid = !!searchDate.fromDate;
-  console.log(searchDate);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
-  const pathName = usePathname();
+  const isSearchValue =
+    !!searchValues.fromDate ||
+    !!searchValues.name ||
+    !!searchValues.healthStatus;
   const { confirm } = Modal;
 
-  // const url = "/doctors/6";
-  const doctorId = parseInt(pathName.split('/').pop());
-  console.log(pathName);
-
-  const getReportsByDoctorId = async () => {
+  const getAllReports = async (pageSize) => {
     try {
       const response = await api.report.reportByDoctorId({
-        id: doctorId,
-        pageNo: '1',
-        noOfItem: '10',
+        // id: doctorId,
+        pageNo: page,
+        noOfItem: '3',
       });
       setReports(response.data.results || []);
+      setTotal(response.data.count);
     } catch (error) {
       console.log(error);
     }
   };
 
   const searchReports = async () => {
-    if (!isDateValid) return;
     try {
       const response = await api.report.searchReports({
-        ...searchDate,
-        id: doctorId,
+        ...searchValues,
         pageNo: 1,
         noOfItem: 10,
       });
       setSearchReportsRes(response.data.results || []);
+      setTotal(response.data.count);
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(searchReportsRes);
 
   useEffect(() => {
-    getReportsByDoctorId();
+    getAllReports();
   }, []);
 
   useEffect(() => {
     searchReports();
-    console.log(searchDate);
-  }, [searchDate]);
+  }, [searchValues]);
 
   const showConfirm = (id) => {
     confirm({
-      title: 'Do you want to delete this report?',
+      title: 'Do you want to delete this case?',
       icon: <ExclamationCircleFilled />,
       okText: 'Yes',
       cancelText: 'No',
@@ -85,11 +81,18 @@ export default function Home() {
   const handleDelete = async (id) => {
     try {
       await api.report.deleteReport({ id: `${id}` });
-      getReportsByDoctorId();
+      getAllReports();
     } catch (error) {
       console.log(error);
     }
   };
+
+  const onChange = (page) => {
+    setPage(page);
+  };
+  useEffect(() => {
+    getAllReports();
+  }, [page]);
 
   const caseReportComponent = (data) => {
     const formatCreatedDate = data.created_at.split('T')[0];
@@ -97,6 +100,8 @@ export default function Home() {
       <CaseReport
         profileImage={data.inspection.pet.pet_image_url}
         createdDate={formatCreatedDate}
+        doctorFirst={data.doctor.first_name}
+        doctorLast={data.doctor.last_name}
         name={data.inspection.pet.pet_name}
         dob={data.inspection.pet.dob}
         breed={data.inspection.pet.breed.breed_name}
@@ -123,17 +128,34 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <DateSearchFilters
-          placeholder="Search cases"
-          setSearchDate={setSearchDate}
-        />
-
-        <div className="grid w-full grid-cols-3 gap-8">
-          {isDateValid
-            ? searchReportsRes?.map(caseReportComponent)
-            : reports?.map(caseReportComponent)}
+        <div className="flex items-center justify-between w-full h-10 mx-1 my-5 md:mx-20">
+          <Text title={`Manage Cases - ${total}`} />
+          {/* <Link href={CREATE_DOCTOR_ROUTE}>
+            <FilledButton variant="primary" label="Add Doctor" />
+          </Link> */}
         </div>
+        <MultiSearchFilter setSearchValues={setSearchValues} />
+
+        <MenuLayout>
+          <div className="grid w-full grid-cols-3 gap-8">
+            {isSearchValue
+              ? searchReportsRes?.map(caseReportComponent)
+              : reports?.map(caseReportComponent)}
+          </div>
+          {reports?.length > 0 && (
+            <div className="flex justify-end mt-10">
+              <Pagination
+                pageSize={3}
+                current={page}
+                total={total}
+                onChange={onChange}
+              />
+            </div>
+          )}
+        </MenuLayout>
       </main>
     </>
   );
-}
+};
+
+export default Cases;
