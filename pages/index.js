@@ -46,7 +46,7 @@ export default function Home() {
     try {
       const response = await api.doctor.getAllDoctors({
         pageNo: '1',
-        noOfItem: '8',
+        noOfItem: '10000',
       });
       setAllDoctors(response.data.results?.map(mapData) || []);
     } catch (error) {
@@ -61,7 +61,7 @@ export default function Home() {
         const response = await api.doctor.searchDoctor({
           name: searchValue,
           pageNo: '1',
-          noOfItem: '10',
+          noOfItem: '10000',
         });
         setSearchRes(response.data.results?.map(mapData) || []);
       } catch (error) {
@@ -202,7 +202,7 @@ export default function Home() {
 
         <SearchFilters
           setSearchValue={setSearchValue}
-          placeholder="Search Doctor"
+          placeholder="Search doctor"
         />
 
         <MenuLayout>
