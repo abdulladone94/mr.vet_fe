@@ -128,33 +128,6 @@ export default function Home() {
           setSearchDate={setSearchDate}
         />
 
-        {/* <div className="grid grid-cols-3 gap-4">
-          {reports?.map(
-            (data) => (
-              // data === null ? (
-              //   <h1>There is no cases available for this doctor</h1>
-              // ) : (
-              <div className="w-[340px] h-[400px]  rounded-md">
-                <CaseCard
-                  button={() => showConfirm(data.id)}
-                  name={data.inspection.pet.pet_name}
-                  age={'Date of Birth: ' + data.inspection.pet.dob}
-                  breed="German Shepherd"
-                  image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj5DTy38Tn--8rMY2LI3rpzV0_nQI1iHuKdw&usqp=CAU"
-                  disease={
-                    'Predicted Disease: ' + data.inspection.disease.disease
-                  }
-                  score={
-                    'Predicted Score: ' + data.inspection.image_confident_score
-                  }
-                  heatMap="https://caninebodybalance.com.au/canine/media/pages/services/thermal-imaging/4a22a1e6f5-1664780008/dog-thermal-imaging.jpg"
-                />
-              </div>
-            )
-            // )
-          )}
-          <CaseReport />
-        </div> */}
         <div className="grid w-full grid-cols-3 gap-8">
           {isDateValid
             ? searchReportsRes?.map(caseReportComponent)

@@ -1,12 +1,4 @@
-import api from '@/api';
-
-const {
-  useContext,
-  useState,
-  useMemo,
-  useEffect,
-  createContext,
-} = require('react');
+const { useContext, useState, createContext } = require('react');
 
 const DoctorContext = createContext();
 

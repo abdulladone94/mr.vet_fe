@@ -42,7 +42,6 @@ const AppLayout = ({ children }) => {
         </div>
         <div>{children}</div>
       </div>
-      {/* <Footer style={{ textAlign: "center" }}>©2023 Booleanlabs</Footer>/ */}
       <Footer />
     </Layout>
   );

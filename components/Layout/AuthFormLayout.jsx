@@ -1,11 +1,3 @@
-/*
- * File: AuthFormLayout.jsx
- * Project: Sharing Sugar
- * Author: Ginthozan Varnakulasingam (ginthozanv@booleanlanbs.biz)
- * File Created: 25 April 2023
- * Copyright 2023 - 2023 Booleanlabs.
- */
-
 import { Typography, Row, Alert } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';

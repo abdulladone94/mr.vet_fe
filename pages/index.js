@@ -156,7 +156,7 @@ export default function Home() {
 
   const showConfirm = (id) => {
     confirm({
-      title: 'Do you want to delete this Doctor?',
+      title: 'Do you want to delete this doctor?',
       icon: <ExclamationCircleFilled />,
       okText: 'Yes',
       cancelText: 'No',
@@ -208,8 +208,6 @@ export default function Home() {
         <MenuLayout>
           <DoctorTable data={data} columns={columns} />
         </MenuLayout>
-
-        {/* <DoctorTable data={data} columns={columns} /> */}
       </main>
     </>
   );

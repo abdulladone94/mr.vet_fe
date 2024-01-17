@@ -1,8 +1,6 @@
 import { Card, Checkbox, Form, Radio, Spin, Upload, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import Image from 'next/image';
 import TextInputFields from '@/components/UI/InputFields/TextInputFields';
 import FilledButton from '@/components/UI/Buttons/FilledButton';
 import api from '@/api';
@@ -221,6 +219,7 @@ const createDoctor = () => {
               <TextInputFields
                 name="password"
                 title="Password"
+                required={true}
                 rules={[
                   { required: true, message: 'New Password is required!' },
                 ]}
@@ -230,6 +229,7 @@ const createDoctor = () => {
               <TextInputFields
                 name="c_password"
                 title="Confirm Password"
+                required={true}
                 rules={[
                   { required: true, message: 'Confirm Password is required!' },
                   ({ getFieldValue }) => ({

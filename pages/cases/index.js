@@ -2,24 +2,17 @@ import api from '@/api';
 import CaseReport from '@/components/Card/CasesReport';
 import MenuLayout from '@/components/Layout/MenuLayout';
 import MultiSearchFilter from '@/components/MultiSearchFilter';
-import SearchFilters from '@/components/SearchFilters';
-import { useDoctors } from '@/context/doctorContext';
 import styles from '@/styles/Home.module.css';
 import Head from 'next/head';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { Modal, Pagination } from 'antd';
 import Text from '@/components/UI/Text/Typography ';
-import Link from 'next/link';
-import { CREATE_DOCTOR_ROUTE } from '@/components/constants/routes';
-import FilledButton from '@/components/UI/Buttons/FilledButton';
-import { usePathname } from 'next/navigation';
 
 const Cases = () => {
   const [reports, setReports] = useState([]);
   const [searchValues, setSearchValues] = useState({});
   const [searchReportsRes, setSearchReportsRes] = useState([]);
-  // const { searchValue, setSearchValue } = useDoctors();
 
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -160,8 +153,6 @@ const Cases = () => {
             </div>
           )}
         </MenuLayout>
-
-        {/* <DoctorTable data={data} columns={columns} /> */}
       </main>
     </>
   );
